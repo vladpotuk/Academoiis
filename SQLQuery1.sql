@@ -1,0 +1,63 @@
+CREATE DATABASE Academy;
+GO
+
+USE Academy;
+GO
+
+CREATE TABLE Faculties (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(100) NOT NULL UNIQUE
+);
+GO
+
+CREATE TABLE Departments (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Financing MONEY NOT NULL DEFAULT 0,
+    Name NVARCHAR(100) NOT NULL UNIQUE,
+    FacultyId INT NOT NULL,
+    FOREIGN KEY (FacultyId) REFERENCES Faculties(Id)
+);
+GO
+
+CREATE TABLE Groups (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(10) NOT NULL UNIQUE,
+    Year INT NOT NULL CHECK (Year >= 1 AND Year <= 5),
+    DepartmentId INT NOT NULL,
+    FOREIGN KEY (DepartmentId) REFERENCES Departments(Id)
+);
+GO
+
+CREATE TABLE Subjects (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(100) NOT NULL UNIQUE
+);
+GO
+
+CREATE TABLE Teachers (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(MAX) NOT NULL,
+    Salary MONEY NOT NULL CHECK (Salary > 0),
+    Surname NVARCHAR(MAX) NOT NULL
+);
+GO
+
+CREATE TABLE Lectures (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    DayOfWeek INT NOT NULL CHECK (DayOfWeek >= 1 AND DayOfWeek <= 7),
+    LectureRoom NVARCHAR(MAX) NOT NULL,
+    SubjectId INT NOT NULL,
+    TeacherId INT NOT NULL,
+    FOREIGN KEY (SubjectId) REFERENCES Subjects(Id),
+    FOREIGN KEY (TeacherId) REFERENCES Teachers(Id)
+);
+GO
+
+CREATE TABLE GroupsLectures (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    GroupId INT NOT NULL,
+    LectureId INT NOT NULL,
+    FOREIGN KEY (GroupId) REFERENCES Groups(Id),
+    FOREIGN KEY (LectureId) REFERENCES Lectures(Id)
+);
+GO
